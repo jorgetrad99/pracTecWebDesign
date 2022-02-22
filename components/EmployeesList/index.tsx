@@ -25,7 +25,7 @@ import { TransitionProps } from '@mui/material/transitions';
 
 interface Data {
   id: string,
-  name: string;
+  name: any;
   surnames: string;
   dateOfBirth: string;
   age: number;
@@ -35,7 +35,7 @@ interface Data {
 
 function createData(
   id: string,
-  name: string,
+  name: any,
   surnames: string,
   dateOfBirth: string,
   age: number,
