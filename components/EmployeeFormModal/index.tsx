@@ -165,11 +165,11 @@ const EmployeeForm = () => {
             
           >
             <FormLabel id="demo-radio-buttons-group-label">Areas of interest</FormLabel>
-            <FormControlLabel control={<Checkbox onChange={ 
-              /* (e) => { 
+            <FormControlLabel control={<Checkbox  /* onChange={ 
+               (e) => { 
                 e.target.value ? setInterests([...interests, {'football': true}])
-              }  */
-            }/>} label="Football" />
+              }  
+            }*//> } label="Football" />
             <FormControlLabel control={<Checkbox onChange={ (e) => console.log(e.target.value) }/>} label="Volleyball" />
             
             <div style={{ display: 'flex', flexDirection: 'row' }}>

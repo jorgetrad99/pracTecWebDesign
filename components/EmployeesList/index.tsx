@@ -191,8 +191,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            align={'center'}
+            padding={'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -440,11 +440,11 @@ const EmployeesList = () => {
                         {row.name}
                       </TableCell>{/* 
                       <TableCell align="right">{row.name}</TableCell> */}
-                      <TableCell align="right">{row.surnames}</TableCell>
-                      <TableCell align="right">{row.dateOfBirth}</TableCell>
-                      <TableCell align="right">{row.age}</TableCell>
-                      <TableCell align="right">{row.genre}</TableCell>
-                      <TableCell align="right">{row.interests}</TableCell>
+                      <TableCell align="center">{row.surnames}</TableCell>
+                      <TableCell align="center">{row.dateOfBirth}</TableCell>
+                      <TableCell align="center">{row.age}</TableCell>
+                      <TableCell align="center">{row.genre}</TableCell>
+                      <TableCell align="center">{row.interests}</TableCell>
                     </TableRow>
                   );
                 })}
