@@ -1,5 +1,6 @@
 import { useState, forwardRef } from 'react';
 
+
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateAdapter from '@mui/lab/AdapterMoment';
 import { Container, TextField, Stack, FormControl, 
@@ -8,6 +9,9 @@ import { Container, TextField, Stack, FormControl,
 } from '@mui/material';
 import { MobileDatePicker } from '@mui/lab';
 import { TransitionProps } from '@mui/material/transitions';
+
+
+import moment from 'moment';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -20,6 +24,7 @@ const Transition = forwardRef(function Transition(
 
 const EmployeeFormModal = () => {
   const [open, setOpen] = useState(false);
+  const [ data, setData ] = useState<any>();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -46,12 +51,9 @@ const EmployeeFormModal = () => {
           <DialogContentText id="alert-dialog-slide-description">
             Fill this form to create an user
           </DialogContentText>
-          <EmployeeForm />
+          <EmployeeForm setData={setData} closeModal={handleClose} />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Save</Button>
-        </DialogActions>
+        
       </Dialog>
     </div>
   );
@@ -60,10 +62,10 @@ const EmployeeFormModal = () => {
 interface Data {
   name: string;
   surnames: string;
-  dateOfBirth: string;
+  dateOfBirth: Date | null;
   age: number;
   genre: string;
-  interests: string;
+  interests: any;
 }
 
 interface Interests {
@@ -72,7 +74,7 @@ interface Interests {
   other: string;
 }
 
-const EmployeeForm = () => {
+const EmployeeForm = ({ setData, closeModal }) => {
   /* const [value, setValue] = useState(Date.now()); */
 
   /* const [ employeeData, setEmployeeData ] = useState<Data>({
@@ -83,12 +85,17 @@ const EmployeeForm = () => {
     genre: "",
     interests: "",
   }); */
+
   const [ name, setName ] = useState("");
   const [ surnames, setSurnames ] = useState("");
-  const [ dateOfBirth, setDateOfBirth ] = useState<Date | null>(new Date());
+  const [ dateOfBirth, setDateOfBirth ] = useState<any>(new Date());
   const [ age, setAge ] = useState(0);
   const [ genre, setGenre ] = useState("Female");
-  const [ interests, setInterests ] = useState<Interests[]>([]);
+  /* const [ interests, setInterests ] = useState<Interests[]>([]); */
+  const [ footballChecked, setFootballChecked ] = useState(false);
+  const [ volleyballChecked, setVolleyballChecked ] = useState(false);
+  const [ otherChecked, setOtherChecked ] = useState(false);
+  const [ otherInterest, setOtherInterest ] = useState("");
 
   const calculateAge = (dateString) => {
     var today = new Date();
@@ -99,6 +106,24 @@ const EmployeeForm = () => {
         age--;
     }
     setAge(age);
+  }
+
+  const saveData = () => {
+    const data = {
+      name: name,
+      surnames: surnames,
+      dateOfBirth: moment(dateOfBirth).format('DD/MM/YYYY'),
+      age: age,
+      genre: genre,
+      interests: {
+        football: footballChecked,
+        volleyball: volleyballChecked,
+        other: otherInterest
+      }
+    }
+
+    console.log(data);
+    setData(data);
   }
 
   return (
@@ -165,19 +190,35 @@ const EmployeeForm = () => {
             
           >
             <FormLabel id="demo-radio-buttons-group-label">Areas of interest</FormLabel>
-            <FormControlLabel control={<Checkbox  /* onChange={ 
-               (e) => { 
-                e.target.value ? setInterests([...interests, {'football': true}])
+            <FormControlLabel control={<Checkbox  onChange={ 
+              (e) => { 
+                setFootballChecked(e.target.checked)
               }  
-            }*//> } label="Football" />
-            <FormControlLabel control={<Checkbox onChange={ (e) => console.log(e.target.value) }/>} label="Volleyball" />
+            }/> } label="Football" />
+            <FormControlLabel control={<Checkbox  onChange={ 
+              (e) => {
+                setVolleyballChecked(e.target.checked)
+              }  
+            }/> } label="Volleyball" />
             
             <div style={{ display: 'flex', flexDirection: 'row' }}>
-              <FormControlLabel control={<Checkbox onChange={ (e) => console.log(e.target.value) }/>} label="Other" />
-              <TextField id="standard-basic" label="" variant="standard" />
+              <FormControlLabel control={<Checkbox  onChange={ 
+              (e) => {
+                setOtherChecked(e.target.checked)
+              }  
+            }/> } label="Other" />
+              <TextField id="standard-basic" disabled={ !otherChecked } value={otherInterest} label="" variant="standard" 
+                onChange={ (e) => setOtherInterest(e.target.value) } />
             </div>
           </FormGroup>
         </Stack>
+        <DialogActions>
+          <Button onClick={closeModal}>Cancel</Button>
+          <Button onClick={() => {
+            saveData()
+            closeModal()
+            }}>Save</Button>
+        </DialogActions>
       </Container>
     </Container>
   );
