@@ -41,11 +41,10 @@ const EmployeeFormModal = () => {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+        <DialogTitle>{"New Employee"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Let Google help apps determine location. This means sending anonymous
-            location data to Google, even when no apps are running.
+            Fill this form to create an user
           </DialogContentText>
           <EmployeeForm />
         </DialogContent>
@@ -67,21 +66,40 @@ interface Data {
   interests: string;
 }
 
-const EmployeeForm = () => {
-  const [value, setValue] = useState(Date.now());
+interface Interests {
+  football: boolean;
+  volleyball: boolean;
+  other: string;
+}
 
-  const [ employeeData, setEmployeeData ] = useState<Data>({
+const EmployeeForm = () => {
+  /* const [value, setValue] = useState(Date.now()); */
+
+  /* const [ employeeData, setEmployeeData ] = useState<Data>({
     name: "",
     surnames: "",
     dateOfBirth: "",
     age: 0,
     genre: "",
     interests: "",
-  });
+  }); */
+  const [ name, setName ] = useState("");
+  const [ surnames, setSurnames ] = useState("");
+  const [ dateOfBirth, setDateOfBirth ] = useState<Date | null>(new Date());
+  const [ age, setAge ] = useState(0);
+  const [ genre, setGenre ] = useState("Female");
+  const [ interests, setInterests ] = useState<Interests[]>([]);
 
-  const handleChange = (newValue) => {
-    setValue(newValue);
-  };
+  const calculateAge = (dateString) => {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    setAge(age);
+  }
 
   return (
     <Container sx={{ display: 'flex', maxWidth: '50rem', flexDirection: 'column', marginTop: '2rem', margin: '0 auto', position: 'relative' }}>
@@ -90,22 +108,19 @@ const EmployeeForm = () => {
         <Stack spacing={3} sx={{ width: 'inherit' }}>
           <TextField
             fullWidth
-            /* sx={{
-              width: 'auto', 
-            }} */
+            value={name}
             id='outlined-basic'
             label='Employee name'
-            variant='outlined'/* 
-            onChange={setEmployeeData({{ name: "" }})} */
+            variant='outlined'
+            onChange={ (e) => setName(e.target.value) }
           />
           <TextField
             fullWidth
-            /* sx={{
-              width: 'auto',
-            }} */
+            value={surnames}
             id='outlined-basic'
             label='Surnames'
             variant='outlined'
+            onChange={ (e) => setSurnames(e.target.value) }
           />
         </Stack>
       </Container>
@@ -115,8 +130,11 @@ const EmployeeForm = () => {
               <MobileDatePicker
                   label="Birth Date"
                   inputFormat="DD/MM/yyyy"
-                  value={value}
-                  onChange={handleChange}
+                  value={dateOfBirth}
+                  onChange={ (e) => { 
+                    setDateOfBirth(e) 
+                    calculateAge(dateOfBirth)
+                  }}
                   renderInput={(params) => <TextField {...params} />}
               />
           </LocalizationProvider>
@@ -125,7 +143,7 @@ const EmployeeForm = () => {
             label="Age"
             defaultValue="0"
             disabled
-            
+            value = {age}
           />
         </Stack>
         <br />
@@ -136,19 +154,26 @@ const EmployeeForm = () => {
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="female"
               name="radio-buttons-group"
+              onChange={ (e) => setGenre(e.target.value) }
             >
               <FormControlLabel value="female" control={<Radio />} label="Female" />
               <FormControlLabel value="male" control={<Radio />} label="Male" />
               <FormControlLabel value="other" control={<Radio />} label="Other" />
             </RadioGroup>
           </FormControl>
-          <FormGroup>
+          <FormGroup
+            
+          >
             <FormLabel id="demo-radio-buttons-group-label">Areas of interest</FormLabel>
-            <FormControlLabel control={<Checkbox />} label="Football" />
-            <FormControlLabel control={<Checkbox />} label="Volleyball" />
+            <FormControlLabel control={<Checkbox onChange={ 
+              /* (e) => { 
+                e.target.value ? setInterests([...interests, {'football': true}])
+              }  */
+            }/>} label="Football" />
+            <FormControlLabel control={<Checkbox onChange={ (e) => console.log(e.target.value) }/>} label="Volleyball" />
             
             <div style={{ display: 'flex', flexDirection: 'row' }}>
-              <FormControlLabel control={<Checkbox />} label="Other" />
+              <FormControlLabel control={<Checkbox onChange={ (e) => console.log(e.target.value) }/>} label="Other" />
               <TextField id="standard-basic" label="" variant="standard" />
             </div>
           </FormGroup>
