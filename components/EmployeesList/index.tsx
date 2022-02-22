@@ -22,6 +22,8 @@ import { visuallyHidden } from '@mui/utils';
 import { v4 as uuid } from 'uuid';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
+import { useContext } from 'react';
+import { DataContext } from '../../context/DataContext';
 
 interface Data {
   id: string,
@@ -315,7 +317,8 @@ const EmployeesList = () => {
   //const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  
+  const { data, setData } = useContext(DataContext);
+  const { rowsJSON, setRowsJSON } = useContext(DataContext);
 
 
   const handleRequestSort = (

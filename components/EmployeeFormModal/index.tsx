@@ -1,4 +1,4 @@
-import { useState, forwardRef } from 'react';
+import { useState, forwardRef, createContext, useContext } from 'react';
 
 
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -10,8 +10,9 @@ import { Container, TextField, Stack, FormControl,
 import { MobileDatePicker } from '@mui/lab';
 import { TransitionProps } from '@mui/material/transitions';
 
-
 import moment from 'moment';
+
+import { DataContext } from '../../context/DataContext';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -24,7 +25,10 @@ const Transition = forwardRef(function Transition(
 
 const EmployeeFormModal = () => {
   const [open, setOpen] = useState(false);
-  const [ data, setData ] = useState<any>();
+  /* const [ data, setData ] = useState<any>(); */
+
+  const { data, setData } = useContext(DataContext);
+  const { rowsJSON, setRowsJSON } = useContext(DataContext);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -51,7 +55,7 @@ const EmployeeFormModal = () => {
           <DialogContentText id="alert-dialog-slide-description">
             Fill this form to create an user
           </DialogContentText>
-          <EmployeeForm setData={setData} closeModal={handleClose} />
+          <EmployeeForm setData={setData} setRowsJSON={setRowsJSON} rowsJSON={rowsJSON} closeModal={handleClose} />
         </DialogContent>
         
       </Dialog>
@@ -74,7 +78,7 @@ interface Interests {
   other: string;
 }
 
-const EmployeeForm = ({ setData, closeModal }) => {
+const EmployeeForm = ({ setData, closeModal, setRowsJSON, rowsJSON }) => {
   /* const [value, setValue] = useState(Date.now()); */
 
   /* const [ employeeData, setEmployeeData ] = useState<Data>({
@@ -121,9 +125,10 @@ const EmployeeForm = ({ setData, closeModal }) => {
         other: otherInterest
       }
     }
-
-    console.log(data);
     setData(data);
+    console.log(data);
+    setRowsJSON((oldArray) =>  [...oldArray, data]);
+    console.log(rowsJSON);
   }
 
   return (

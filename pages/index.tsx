@@ -3,14 +3,23 @@ import { Typography, Button } from "@mui/material";
 import EmployeeFormModal from "../components/EmployeeFormModal/index";
 import EmployeesList from "../components/EmployeesList/index";
 
+import { DataProvider } from "../context/DataContext";
+
 const Home = () => {
     return (
-        <div>
-            <Typography variant='h4' component='h3'>This the home page</Typography>
-            <Typography variant='h4' component='h3'>Employee General Data</Typography>
-            <EmployeeFormModal />
+        <DataProvider>
+            <Typography 
+                variant='h4' 
+                component='h3' 
+                align="center" 
+                margin={5}
+            >
+                    This a Eemployees Managment System
+            </Typography>
+            <br /><br />
+            <EmployeeFormModal  />
             <EmployeesList />
-        </div>
+        </DataProvider>
     );
 };
 
