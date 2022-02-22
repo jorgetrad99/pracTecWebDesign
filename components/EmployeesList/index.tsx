@@ -55,21 +55,6 @@ function createData(
 
 let rows = [
   createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -324,7 +309,7 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 
 const EmployeesList = () => {
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('age');
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('name');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   //const [dense, setDense] = React.useState(false);
@@ -409,13 +394,13 @@ const EmployeesList = () => {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
+                  const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.id)}
+                      onClick={(event) => handleClick(event, row.name)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
