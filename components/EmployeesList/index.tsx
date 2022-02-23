@@ -24,6 +24,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { TransitionProps } from '@mui/material/transitions';
 import { useContext } from 'react';
 import { DataContext } from '../../context/DataContext';
+import { ActionsContext } from '../../context/ActionsContext';
+import EmployeeFormModal from '../EmployeeFormModal'
 
 interface Data {
   id: string,
@@ -55,9 +57,9 @@ function createData(
   };
 }
 
-let rows = [
-  createData(uuid(), 'Enrique', 'Gómez Jiménez', '05/06/1950', 61, 'Male', 'Soccer, Volleyball, Athletics'),
-];
+/* let rows = [
+  createData(uuid(), 'Jorge', 'Trad', '22/11/1999', 22, 'Male', 'Soccer, Volleyball, Athletics'),
+]; */
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -154,6 +156,7 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
+
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
     props;
   const createSortHandler =
@@ -214,10 +217,11 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const { numSelected } = props;
+const EnhancedTableToolbar = ({ numSelected, setOpenModal }) => {
 
   const [open, setOpen] = React.useState(false);
+
+  const { actionEmployeeFlag, setActionEmployeeFlag } = useContext(ActionsContext);
 
   const handlerClickOpen = () => {
     setOpen(true);
@@ -267,7 +271,11 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
         <div style={{ display: 'flex' }}>
           <Tooltip title="Delete">
             <IconButton
-              onClick={handlerClickOpen}
+              
+              onClick={() => { 
+                setActionEmployeeFlag(3);
+                handlerClickOpen();
+              }}
             >
               <DeleteIcon />
             </IconButton>
@@ -275,14 +283,20 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
         </div>
       ) : (
         <Tooltip title="Create">
-            <IconButton>
+            <IconButton onClick={() => {
+              setOpenModal(true);
+              setActionEmployeeFlag(1);
+            }}>
               <AddCircleIcon />
             </IconButton>
           </Tooltip>
       )}
       { numSelected == 1 && (
         <Tooltip title="Edit">
-          <IconButton>
+          <IconButton onClick={() => {
+              setActionEmployeeFlag(2);
+              setOpenModal(true);
+            }}>
             <EditIcon />
           </IconButton>
         </Tooltip>
@@ -314,11 +328,21 @@ const EmployeesList = () => {
   const [orderBy, setOrderBy] = React.useState<keyof Data>('name');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
+
+  const [ openModal, setOpenModal ] = React.useState(false);
   //const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const { data, setData } = useContext(DataContext);
-  const { rowsJSON, setRowsJSON } = useContext(DataContext);
+  /* const [ dataToSave, setDataToSave ] = React.useState(); */
+
+  const [ rows, setRows ] = React.useState([]);
+  
+
+  const { data, setData, rowsJSON, setRowsJSON } = useContext(DataContext);
+  const { actionEmployeeFlag, setActionEmployeeFlag } = useContext(ActionsContext);
+
+  
+
 
 
   const handleRequestSort = (
@@ -373,89 +397,117 @@ const EmployeesList = () => {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={'medium'}
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-              rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+  const createEmployee = (employee) => {
+    let interestsFormatted = '';
+    employee.interests.football && (interestsFormatted = 'Football, ')
+    employee.interests.volleyball && (interestsFormatted += 'Volleyball, ')
+    interestsFormatted += employee.interests.other;
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.name)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.name}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
+    setRows((rows) => [
+      ...rows, 
+      createData(
+        uuid(), 
+        employee.name, 
+        employee.surnames,
+        employee.dateOfBirth, 
+        employee.age, 
+        employee.genre, 
+        interestsFormatted)
+      ])
+  }
+
+  React.useEffect(() => {
+    (actionEmployeeFlag == 1 && data) && (createEmployee(data));
+  }, [ data ]);
+
+  return (
+    <div>
+      <EmployeeFormModal openModal={openModal} setOpenModal={setOpenModal} />
+      {/* {console.log(data)} */}
+      <Box sx={{ m: 2 }}>
+        <Paper sx={{ width: '100%', mb: 2 }}>
+          <EnhancedTableToolbar numSelected={selected.length}  setOpenModal={setOpenModal} />
+          <TableContainer>
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size={'medium'}
+            >
+              <EnhancedTableHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+                
+              />
+              <TableBody>
+                {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+                rows.slice().sort(getComparator(order, orderBy)) */}
+                {stableSort(rows, getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.name);
+                    const labelId = `enhanced-table-checkbox-${index}`;
+
+                    return (
+                      <TableRow
+                        hover
+                        onClick={(event) => handleClick(event, row.name)}
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.name}
+                        selected={isItemSelected}
                       >
-                        {row.name}
-                      </TableCell>{/* 
-                      <TableCell align="right">{row.name}</TableCell> */}
-                      <TableCell align="center">{row.surnames}</TableCell>
-                      <TableCell align="center">{row.dateOfBirth}</TableCell>
-                      <TableCell align="center">{row.age}</TableCell>
-                      <TableCell align="center">{row.genre}</TableCell>
-                      <TableCell align="center">{row.interests}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-      
-    </Box>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              'aria-labelledby': labelId,
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                        >
+                          {row.name}
+                        </TableCell>{/* 
+                        <TableCell align="right">{row.name}</TableCell> */}
+                        <TableCell align="center">{row.surnames}</TableCell>
+                        <TableCell align="center">{row.dateOfBirth}</TableCell>
+                        <TableCell align="center">{row.age}</TableCell>
+                        <TableCell align="center">{row.genre}</TableCell>
+                        <TableCell align="center">{row.interests}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+        
+      </Box>
+    </div>
   );
 }
 

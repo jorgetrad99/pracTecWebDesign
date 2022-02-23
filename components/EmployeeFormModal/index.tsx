@@ -1,4 +1,4 @@
-import { useState, forwardRef, createContext, useContext } from 'react';
+import { useState, forwardRef, useContext, useEffect } from 'react';
 
 
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -13,36 +13,58 @@ import { TransitionProps } from '@mui/material/transitions';
 import moment from 'moment';
 
 import { DataContext } from '../../context/DataContext';
+import { TryRounded } from '@mui/icons-material';
+import { ActionsContext } from '../../context/ActionsContext';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
+
   },
   ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const EmployeeFormModal = () => {
+const EmployeeFormModal = ({ openModal, setOpenModal }) => {
   const [open, setOpen] = useState(false);
   /* const [ data, setData ] = useState<any>(); */
 
-  const { data, setData } = useContext(DataContext);
-  const { rowsJSON, setRowsJSON } = useContext(DataContext);
+  const { data, setData, rowsJSON, setRowsJSON } = useContext(DataContext);
+  const { actionEmployeeFlag, setActionEmployeeFlag } = useContext(ActionsContext);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+    setOpenModal(false);
     setOpen(false);
   };
 
+  const findEmployee = () => {
+
+  }
+
+  useEffect(() => {
+    console.log(actionEmployeeFlag);
+    console.log(openModal);
+    //Create Employee
+    actionEmployeeFlag == 1 && (openModal && handleClickOpen())
+    //Update Employee
+    actionEmployeeFlag == 2 && (openModal && (
+      findEmployee(),
+      handleClickOpen()
+    )
+    )
+
+  }, [ actionEmployeeFlag, openModal ]);
+
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      {/* <Button variant="outlined" onClick={handleClickOpen}>
         Slide in alert dialog
-      </Button>
+      </Button> */}
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -55,7 +77,7 @@ const EmployeeFormModal = () => {
           <DialogContentText id="alert-dialog-slide-description">
             Fill this form to create an user
           </DialogContentText>
-          <EmployeeForm setData={setData} setRowsJSON={setRowsJSON} rowsJSON={rowsJSON} closeModal={handleClose} />
+          <EmployeeForm setData={setData} data={data} setRowsJSON={setRowsJSON} rowsJSON={rowsJSON} closeModal={handleClose} />
         </DialogContent>
         
       </Dialog>
@@ -78,7 +100,7 @@ interface Interests {
   other: string;
 }
 
-const EmployeeForm = ({ setData, closeModal, setRowsJSON, rowsJSON }) => {
+const EmployeeForm = ({ setData, data, closeModal, setRowsJSON, rowsJSON }) => {
   /* const [value, setValue] = useState(Date.now()); */
 
   /* const [ employeeData, setEmployeeData ] = useState<Data>({
@@ -112,8 +134,8 @@ const EmployeeForm = ({ setData, closeModal, setRowsJSON, rowsJSON }) => {
     setAge(age);
   }
 
-  const saveData = () => {
-    const data = {
+  const getFormData = () => {
+    return {
       name: name,
       surnames: surnames,
       dateOfBirth: moment(dateOfBirth).format('DD/MM/YYYY'),
@@ -125,10 +147,30 @@ const EmployeeForm = ({ setData, closeModal, setRowsJSON, rowsJSON }) => {
         other: otherInterest
       }
     }
-    setData(data);
-    console.log(data);
-    setRowsJSON((oldArray) =>  [...oldArray, data]);
-    console.log(rowsJSON);
+  }
+
+  const saveData = () => {
+    const formData = getFormData();
+    setData(formData);
+    cleanFields();
+  }
+
+  const updateData = () => {
+    const formData = getFormData();
+    
+  }
+
+  const cleanFields = () => {
+    setName("");
+    setSurnames("");
+    setDateOfBirth(new Date());
+    setAge(0);
+    setGenre("Female");
+
+    setFootballChecked(false);
+    setVolleyballChecked(false);
+    setOtherChecked(false);
+    setOtherInterest("");
   }
 
   return (
@@ -182,7 +224,7 @@ const EmployeeForm = ({ setData, closeModal, setRowsJSON, rowsJSON }) => {
             <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="female"
+              defaultValue="Female"
               name="radio-buttons-group"
               onChange={ (e) => setGenre(e.target.value) }
             >
@@ -195,19 +237,19 @@ const EmployeeForm = ({ setData, closeModal, setRowsJSON, rowsJSON }) => {
             
           >
             <FormLabel id="demo-radio-buttons-group-label">Areas of interest</FormLabel>
-            <FormControlLabel control={<Checkbox  onChange={ 
+            <FormControlLabel /* value={footballChecked} */ control={<Checkbox checked={footballChecked} onChange={ 
               (e) => { 
                 setFootballChecked(e.target.checked)
               }  
             }/> } label="Football" />
-            <FormControlLabel control={<Checkbox  onChange={ 
+            <FormControlLabel /* value={volleyballChecked} */ control={<Checkbox checked={volleyballChecked} onChange={ 
               (e) => {
                 setVolleyballChecked(e.target.checked)
               }  
             }/> } label="Volleyball" />
             
             <div style={{ display: 'flex', flexDirection: 'row' }}>
-              <FormControlLabel control={<Checkbox  onChange={ 
+              <FormControlLabel /* value={otherChecked} */ control={<Checkbox checked={otherChecked} onChange={ 
               (e) => {
                 setOtherChecked(e.target.checked)
               }  
