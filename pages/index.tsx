@@ -1,27 +1,24 @@
-import { Typography, Button } from "@mui/material";
+import { Fragment } from "react";
 
-import EmployeeFormModal from "../components/EmployeeFormModal/index";
-import EmployeesList from "../components/EmployeesList/index";
-
-import { DataProvider } from "../context/DataContext";
-import { ActionsProvider } from "../context/ActionsContext";
+import NextLink from 'next/link';
 
 const Home = () => {
     return (
-        <DataProvider>
-            <ActionsProvider>
-                <Typography 
-                    variant='h4' 
-                    component='h3' 
-                    align="center" 
-                    margin={5}
-                >
-                        This a Eemployees Managment System
-                </Typography>
-                <EmployeesList />
-            </ActionsProvider>
-        </DataProvider>
-    );
-};
+        <Fragment>
+            <NextLink
+                href='/practice1'
+            >
+                <a>Practice 1. Employees Managment System</a>
+            </NextLink>
+            <br /><br />
+            <NextLink
+                href='/practice2'
+            >
+                <a>Practice 2. Multiple Threads Game</a>
+            </NextLink>
+        </Fragment>
+    )
+}
 
 export default Home;
+

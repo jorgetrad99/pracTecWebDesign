@@ -23,8 +23,8 @@ import { v4 as uuid } from 'uuid';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import { useContext } from 'react';
-import { DataContext } from '../../context/DataContext';
-import { ActionsContext } from '../../context/ActionsContext';
+import { DataContext } from '../../../context/DataContext';
+import { ActionsContext } from '../../../context/ActionsContext';
 import EmployeeFormModal from '../EmployeeFormModal'
 
 interface Data {

@@ -12,9 +12,9 @@ import { TransitionProps } from '@mui/material/transitions';
 
 import moment from 'moment';
 
-import { DataContext } from '../../context/DataContext';
+import { DataContext } from '../../../context/DataContext';
 import { TryRounded } from '@mui/icons-material';
-import { ActionsContext } from '../../context/ActionsContext';
+import { ActionsContext } from '../../../context/ActionsContext';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
