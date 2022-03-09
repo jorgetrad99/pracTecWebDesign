@@ -16,6 +16,12 @@ const Home = () => {
             >
                 <a>Practice 2. Multiple Threads Game</a>
             </NextLink>
+            <br /><br />
+            <NextLink
+                href='/examU1'
+            >
+                <a>Exam Unit 1. Employees Managment System</a>
+            </NextLink>
         </Fragment>
     )
 }
