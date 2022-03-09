@@ -13,7 +13,7 @@ let boxes = [];
 
 let headBox = [];
 
-const Vector = ({ setThreeBoxesMarked }) => {
+const Vector = ({ setThreeBoxesMarked, markThreeBoxesWithXFlag, setMarkThreeBoxesWithXFlag }) => {
   const [ boxesState, setBoxesState ] = useState([]);
 
   const settingPositionBoxes = () => {
@@ -58,6 +58,13 @@ const markThreeBoxesWithX = () => {
     initiallizeVector();
   }, []);
 
+  useEffect(() => {
+    markThreeBoxesWithXFlag && (
+      markThreeBoxesWithX(),
+      setMarkThreeBoxesWithXFlag(false)
+    )
+  }, [markThreeBoxesWithXFlag]);
+
   return (
     <Fragment>
       <TableContainer component={Paper}>
@@ -87,7 +94,6 @@ const markThreeBoxesWithX = () => {
           )}
         </Table>
       </TableContainer>
-      <Button variant='outlined' onClick={markThreeBoxesWithX}>Mark 3 boxes with -1</Button>
     </Fragment>
   );
 }

@@ -9,20 +9,22 @@ const PlayerRecord = ({
     threeBoxesMarked 
 }) => {
     const [ recordState, setRecordState ] = useState([]);
-    
-    let record = [];
-    let pointer = 0;
 
     const getRandomNumber = () => {
         return Math.floor(Math.random() * (4));
     }
     
     const gameStarted = () => {
+        let record = [];
+        let pointer = 0;
+        let tries = 0;
+
         while(pointer != 24) {
             const actualPointer = pointer;
             const randomNumber = getRandomNumber();
             let newPosition = actualPointer + randomNumber;
             let boxContent = 0;
+            tries++;
     
             if(newPosition > 24) {
                 newPosition = 24;
@@ -34,14 +36,16 @@ const PlayerRecord = ({
             }
     
             record.push({
+                tries: tries,
                 actual_position: actualPointer,
                 advance: randomNumber,
                 box_content: boxContent,
                 new_position: newPosition
             });
     
-            setRecordState(record);
             pointer = newPosition;
+            setRecordState(record);
+            setIsPlaying(false);
         }
     }
 
@@ -49,18 +53,22 @@ const PlayerRecord = ({
         (isPlaying && threeBoxesMarked) && gameStarted()
     }, [ isPlaying ]);
 
+    useEffect(() => {
+        setRecordState([]);
+    }, [ threeBoxesMarked ]);
+
     return (
         <Fragment>
-            <div style={{
-                display: 'flex',
+            <Paper sx={{ display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center'
-             }}>
+                alignItems: 'center', overflow: 'hidden' }}>
+                
                 <h2>Player {playerNumber}: {playerName}</h2>
-                <TableContainer component={Paper}>
-                    <Table aria-label="simple table">
+                <TableContainer sx={{ maxHeight: 500 }}>
+                    <Table stickyHeader aria-label="simple table">
                     <TableHead>
                         <TableRow >
+                            <TableCell align="center">Tries</TableCell>
                             <TableCell align="center">Actual position</TableCell>
                             <TableCell align="center">Advance</TableCell>
                             <TableCell align="center">Content of this box</TableCell>
@@ -72,9 +80,12 @@ const PlayerRecord = ({
                                 { recordState.length > 0 && 
                                     recordState.map((record) => (
                                         <TableRow
-                                            /* key={1} */
+                                            key={record.try}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
+                                            <TableCell component="th" scope="box" align="center">
+                                            {record.tries}
+                                            </TableCell>
                                             <TableCell component="th" scope="box" align="center">
                                             {record.actual_position}
                                             </TableCell>
@@ -93,7 +104,7 @@ const PlayerRecord = ({
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </div>
+            </Paper>
         </Fragment>
     )
 }
