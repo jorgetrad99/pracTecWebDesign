@@ -29,31 +29,31 @@ import EmployeeFormModal from '../EmployeeFormModal'
 
 interface Data {
   id: string,
-  name: any;
-  surnames: string;
-  dateOfBirth: string;
-  age: number;
-  genre: string;
-  interests: string;
+  name: string,
+  workingHours: number,
+  earningsPerHour: number,
+  grossSalary: number,
+  deductions: number,
+  netSalary: number,
 }
 
 function createData(
   id: string,
-  name: any,
-  surnames: string,
-  dateOfBirth: string,
-  age: number,
-  genre: string,
-  interests: string,
+  name: string,
+  workingHours: number,
+  earningsPerHour: number,
+  grossSalary: number,
+  deductions: number,
+  netSalary: number,
 ): Data {
   return {
     id,
     name,
-    surnames,
-    dateOfBirth,
-    age,
-    genre,
-    interests,
+    workingHours,
+    earningsPerHour,
+    grossSalary,
+    deductions,
+    netSalary
   };
 }
 
@@ -114,34 +114,34 @@ const headCells: readonly HeadCell[] = [
     label: 'Name',
   },
   {
-    id: 'surnames',
-    numeric: false,
+    id: 'workingHours',
+    numeric: true,
     disablePadding: true,
-    label: 'Surnames',
+    label: 'Working hours',
   },
   {
-    id: 'dateOfBirth',
-    numeric: false,
+    id: 'earningsPerHour',
+    numeric: true,
     disablePadding: true,
-    label: 'Date of Birth',
+    label: 'Earnings per hour',
   },
   {
-    id: 'age',
+    id: 'grossSalary',
     numeric: true,
     disablePadding: false,
-    label: 'Age',
+    label: 'Gross salary',
   },
   {
-    id: 'genre',
+    id: 'deductions',
     numeric: false,
     disablePadding: true,
-    label: 'Genre',
+    label: 'Deductions',
   },
   {
-    id: 'interests',
+    id: 'netSalary',
     numeric: false,
     disablePadding: true,
-    label: 'Areas of Interests',
+    label: 'Net Salary',
   },
 ];
 
@@ -398,21 +398,18 @@ const EmployeesList = () => {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const createEmployee = (employee) => {
-    let interestsFormatted = '';
-    employee.interests.football && (interestsFormatted = 'Football, ')
-    employee.interests.volleyball && (interestsFormatted += 'Volleyball, ')
-    interestsFormatted += employee.interests.other;
 
     setRows((rows) => [
       ...rows, 
       createData(
         uuid(), 
         employee.name, 
-        employee.surnames,
-        employee.dateOfBirth, 
-        employee.age, 
-        employee.genre, 
-        interestsFormatted)
+        employee.workingHours,
+        employee.earningsPerHour, 
+        employee.grossSalary, 
+        employee.deductions,
+        employee.netSalary,
+      )
       ])
   }
 
@@ -478,11 +475,11 @@ const EmployeesList = () => {
                           {row.name}
                         </TableCell>{/* 
                         <TableCell align="right">{row.name}</TableCell> */}
-                        <TableCell align="center">{row.surnames}</TableCell>
-                        <TableCell align="center">{row.dateOfBirth}</TableCell>
-                        <TableCell align="center">{row.age}</TableCell>
-                        <TableCell align="center">{row.genre}</TableCell>
-                        <TableCell align="center">{row.interests}</TableCell>
+                        <TableCell align="center">{row.workingHours}</TableCell>
+                        <TableCell align="center">{row.earningsPerHour}</TableCell>
+                        <TableCell align="center">{row.grossSalary}</TableCell>
+                        <TableCell align="center">{row.deductions}</TableCell>
+                        <TableCell align="center">{row.netSalary}</TableCell>
                       </TableRow>
                     );
                   })}

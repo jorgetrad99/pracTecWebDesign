@@ -111,42 +111,20 @@ const EmployeeForm = ({ setData, data, closeModal, setRowsJSON, rowsJSON }) => {
   }); */
 
   const [ name, setName ] = useState("");
-  const [ surnames, setSurnames ] = useState("");
-  const [ dateOfBirth, setDateOfBirth ] = useState<any>(new Date());
   const [ workingHours, setWorkingHours ] = useState(0);
   const [ earningsPerHour, setEarningsPerHour ] = useState(0);
+  const [ grossSalary, setGrossSalary ] = useState(0);
+  const [ deductions, setDeductions ] = useState(0);
   const [ netSalary, setNetSalary ] = useState(0);
-
-  const [ genre, setGenre ] = useState("Female");
-  /* const [ interests, setInterests ] = useState<Interests[]>([]); */
-  const [ footballChecked, setFootballChecked ] = useState(false);
-  const [ volleyballChecked, setVolleyballChecked ] = useState(false);
-  const [ otherChecked, setOtherChecked ] = useState(false);
-  const [ otherInterest, setOtherInterest ] = useState("");
-
-  const calculateworkingHours = (dateString) => {
-    var today = new Date();
-    var birthDate = new Date(dateString);
-    var workingHours = today.getFullYear() - birthDate.getFullYear();
-    var m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        workingHours--;
-    }
-    setWorkingHours(workingHours);
-  }
 
   const getFormData = () => {
     return {
       name: name,
-      surnames: surnames,
-      dateOfBirth: moment(dateOfBirth).format('DD/MM/YYYY'),
       workingHours: workingHours,
-      genre: genre,
-      interests: {
-        football: footballChecked,
-        volleyball: volleyballChecked,
-        other: otherInterest
-      }
+      earningsPerHour: earningsPerHour,
+      grossSalary: grossSalary,
+      deductions: deductions,
+      netSalary: netSalary
     }
   }
 
@@ -163,24 +141,28 @@ const EmployeeForm = ({ setData, data, closeModal, setRowsJSON, rowsJSON }) => {
 
   const cleanFields = () => {
     setName("");
-    setSurnames("");
-    setDateOfBirth(new Date());
     setWorkingHours(0);
-    setGenre("Female");
-
-    setFootballChecked(false);
-    setVolleyballChecked(false);
-    setOtherChecked(false);
-    setOtherInterest("");
+    setEarningsPerHour(0);
+    setGrossSalary(0);
+    setDeductions(0);
+    setNetSalary(0);
   }
 
   useEffect(() => {
     if(workingHours > 0 && earningsPerHour > 0) {
-      setNetSalary(workingHours * earningsPerHour);
+      setGrossSalary(workingHours * earningsPerHour);
+    } else {
+      setGrossSalary(0);
+    }
+  }, [ earningsPerHour, workingHours ]);
+
+  useEffect(() => {
+    if(grossSalary > 0 && deductions > 0) {
+      setNetSalary(grossSalary - deductions);
     } else {
       setNetSalary(0);
     }
-  }, [ earningsPerHour, workingHours ]);
+  }, [ grossSalary, deductions ]);
 
   return (
     <Container sx={{ display: 'flex', maxWidth: '50rem', flexDirection: 'column', marginTop: '2rem', margin: '0 auto', position: 'relative' }}>
@@ -194,14 +176,6 @@ const EmployeeForm = ({ setData, data, closeModal, setRowsJSON, rowsJSON }) => {
             label='Employee name'
             variant='outlined'
             onChange={ (e) => setName(e.target.value) }
-          />
-          <TextField
-            fullWidth
-            value={surnames}
-            id='outlined-basic'
-            label='Surnames'
-            variant='outlined'
-            onChange={ (e) => setSurnames(e.target.value) }
           />
         </Stack>
       </Container>
@@ -221,53 +195,27 @@ const EmployeeForm = ({ setData, data, closeModal, setRowsJSON, rowsJSON }) => {
           />
           <TextField
             id="outlined-read-only-input"
-            label="Salario bruto"
+            label="Gross Salary"
             defaultValue="0"
+            disabled
+            value={grossSalary}
+          />
+        </Stack>
+        <br /><br />
+        <Stack spacing={3} direction="row" sx={{ display: 'flex', justifyContent: 'space-evenly' }} >
+          <TextField
+            label="Deductions"
+            value = {deductions}
+            onChange={(e) => setDeductions(Number(e.target.value))}
+          />
+          <TextField
+            id="outlined-read-only-input"
+            label="Net salary"
             disabled
             value={netSalary}
           />
         </Stack>
         <br />
-        <Stack spacing={3} direction="row" sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <FormControl>
-            <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="Female"
-              name="radio-buttons-group"
-              onChange={ (e) => setGenre(e.target.value) }
-            >
-              <FormControlLabel value="female" control={<Radio />} label="Female" />
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
-              <FormControlLabel value="other" control={<Radio />} label="Other" />
-            </RadioGroup>
-          </FormControl>
-          <FormGroup
-            
-          >
-            <FormLabel id="demo-radio-buttons-group-label">Areas of interest</FormLabel>
-            <FormControlLabel /* value={footballChecked} */ control={<Checkbox checked={footballChecked} onChange={ 
-              (e) => { 
-                setFootballChecked(e.target.checked)
-              }  
-            }/> } label="Football" />
-            <FormControlLabel /* value={volleyballChecked} */ control={<Checkbox checked={volleyballChecked} onChange={ 
-              (e) => {
-                setVolleyballChecked(e.target.checked)
-              }  
-            }/> } label="Volleyball" />
-            
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
-              <FormControlLabel /* value={otherChecked} */ control={<Checkbox checked={otherChecked} onChange={ 
-              (e) => {
-                setOtherChecked(e.target.checked)
-              }  
-            }/> } label="Other" />
-              <TextField id="standard-basic" disabled={ !otherChecked } value={otherInterest} label="" variant="standard" 
-                onChange={ (e) => setOtherInterest(e.target.value) } />
-            </div>
-          </FormGroup>
-        </Stack>
         <DialogActions>
           <Button onClick={closeModal}>Cancel</Button>
           <Button onClick={() => {
