@@ -47,6 +47,7 @@ const markThreeBoxesWithX = () => {
       boxes[randomBox] = -1;
     }
     if(threeBoxIndex.length == 3){
+      setThreeBoxesMarked(threeBoxIndex);
       setBoxesState(boxes);
       return;
     }
@@ -56,11 +57,6 @@ const markThreeBoxesWithX = () => {
   useEffect(() => {
     initiallizeVector();
   }, []);
-
-  useEffect(() => {
-    console.log('boxesState');
-    console.log(boxesState);
-  }, [ boxesState ]);
 
   return (
     <Fragment>
@@ -92,7 +88,6 @@ const markThreeBoxesWithX = () => {
         </Table>
       </TableContainer>
       <Button variant='outlined' onClick={markThreeBoxesWithX}>Mark 3 boxes with -1</Button>
-
     </Fragment>
   );
 }

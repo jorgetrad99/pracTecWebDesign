@@ -1,7 +1,53 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { Fragment } from "react";
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Fragment, useEffect, useState } from "react";
 
-const PlayerRecord = ({playerNumber, playerName, }) => {
+const PlayerRecord = ({ 
+    playerNumber, 
+    playerName, 
+    isPlaying, 
+    setIsPlaying, 
+    threeBoxesMarked 
+}) => {
+    const [ recordState, setRecordState ] = useState([]);
+    
+    let record = [];
+    let pointer = 0;
+
+    const getRandomNumber = () => {
+        return Math.floor(Math.random() * (4));
+    }
+    
+    const gameStarted = () => {
+        while(pointer != 24) {
+            const actualPointer = pointer;
+            const randomNumber = getRandomNumber();
+            let newPosition = actualPointer + randomNumber;
+            let boxContent = 0;
+    
+            if(newPosition > 24) {
+                newPosition = 24;
+            }
+    
+            if(threeBoxesMarked.find((element) => element == newPosition)) {
+                newPosition = 0;
+                boxContent = -1;
+            }
+    
+            record.push({
+                actual_position: actualPointer,
+                advance: randomNumber,
+                box_content: boxContent,
+                new_position: newPosition
+            });
+    
+            setRecordState(record);
+            pointer = newPosition;
+        }
+    }
+
+    useEffect(() => {
+        (isPlaying && threeBoxesMarked) && gameStarted()
+    }, [ isPlaying ]);
 
     return (
         <Fragment>
@@ -22,23 +68,28 @@ const PlayerRecord = ({playerNumber, playerName, }) => {
                         </TableRow>
                     </TableHead>
                         <TableBody>
-                            <TableRow
-                            /* key={1} */
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="box" align="center">
-                                0
-                                </TableCell>
-                                <TableCell component="th" scope="box" align="center">
-                                1
-                                </TableCell>
-                                <TableCell component="th" scope="box" align="center">
-                                0
-                                </TableCell>
-                                <TableCell component="th" scope="box" align="center">
-                                1
-                                </TableCell>
-                            </TableRow>
+                            
+                                { recordState.length > 0 && 
+                                    recordState.map((record) => (
+                                        <TableRow
+                                            /* key={1} */
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="box" align="center">
+                                            {record.actual_position}
+                                            </TableCell>
+                                            <TableCell component="th" scope="box" align="center">
+                                            {record.advance}
+                                            </TableCell>
+                                            <TableCell component="th" scope="box" align="center">
+                                            {record.box_content}
+                                            </TableCell>
+                                            <TableCell component="th" scope="box" align="center">
+                                            {record.new_position}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                }
                         </TableBody>
                     </Table>
                 </TableContainer>

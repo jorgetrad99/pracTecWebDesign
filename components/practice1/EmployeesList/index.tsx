@@ -423,7 +423,6 @@ const EmployeesList = () => {
   return (
     <div>
       <EmployeeFormModal openModal={openModal} setOpenModal={setOpenModal} />
-      {/* {console.log(data)} */}
       <Box sx={{ m: 2 }}>
         <Paper sx={{ width: '100%', mb: 2 }}>
           <EnhancedTableToolbar numSelected={selected.length}  setOpenModal={setOpenModal} />

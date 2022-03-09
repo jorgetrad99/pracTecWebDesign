@@ -47,8 +47,6 @@ const EmployeeFormModal = ({ openModal, setOpenModal }) => {
   }
 
   useEffect(() => {
-    console.log(actionEmployeeFlag);
-    console.log(openModal);
     //Create Employee
     actionEmployeeFlag == 1 && (openModal && handleClickOpen())
     //Update Employee

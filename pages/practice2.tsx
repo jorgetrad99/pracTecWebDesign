@@ -1,10 +1,11 @@
 import { Button, Container } from "@mui/material";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import PlayerRecord from "../components/practice2/PlayerRecord";
 import Vector from "../components/practice2/Vector";
 
 const Practice2 = () => {
     const [ threeBoxesMarked, setThreeBoxesMarked ] = useState();
+    const [ isPlaying, setIsPlaying ] = useState(false);
 
     return (
         <Fragment>
@@ -21,13 +22,13 @@ const Practice2 = () => {
                     gridTemplateColumns: 'repeat(3, 1fr)',
                     padding: 0
                 }}>
-                    <PlayerRecord playerNumber={1} playerName='Joaquín' />
-                    <PlayerRecord playerNumber={2} playerName='Guillermo' />
-                    <PlayerRecord playerNumber={3} playerName='José' />
+                    <PlayerRecord playerNumber={1} playerName='Joaquín' isPlaying={isPlaying} setIsPlaying={setIsPlaying} threeBoxesMarked={threeBoxesMarked} />
+                    <PlayerRecord playerNumber={2} playerName='Guillermo' isPlaying={isPlaying} setIsPlaying={setIsPlaying} threeBoxesMarked={threeBoxesMarked} />
+                    <PlayerRecord playerNumber={3} playerName='José' isPlaying={isPlaying} setIsPlaying={setIsPlaying} threeBoxesMarked={threeBoxesMarked} />
                 </Container>
 
             </Container>
-            <Button variant='contained'>Jugar</Button>
+            <Button variant='contained' onClick={() => setIsPlaying(!isPlaying)}>Jugar</Button>
         </Fragment>
     );
 }
