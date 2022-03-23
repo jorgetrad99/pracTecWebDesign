@@ -5,7 +5,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import PlayerRecord from "../components/practice2/PlayerRecord";
 import Vector from "../components/practice2/Vector";
 
-const Practice2 = () => {
+const Practice2U1 = () => {
     const [ threeBoxesMarked, setThreeBoxesMarked ] = useState();
     const [ isPlaying, setIsPlaying ] = useState(false);
 
@@ -67,4 +67,4 @@ const Practice2 = () => {
     );
 }
 
-export default Practice2;
+export default Practice2U1;

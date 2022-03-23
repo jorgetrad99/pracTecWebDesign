@@ -6,7 +6,7 @@ import EmployeesList from "../components/practice1/EmployeesList/index";
 import { DataProvider } from "../context/DataContext";
 import { ActionsProvider } from "../context/ActionsContext";
 
-const Practice1 = () => {
+const Practice1U1 = () => {
     return (
         <DataProvider>
             <ActionsProvider>
@@ -24,4 +24,4 @@ const Practice1 = () => {
     );
 };
 
-export default Practice1;
+export default Practice1U1;
