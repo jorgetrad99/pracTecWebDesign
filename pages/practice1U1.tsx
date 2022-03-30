@@ -1,7 +1,7 @@
 import { Typography, Button } from "@mui/material";
 
-import EmployeeFormModal from "../components/practice1/EmployeeFormModal/index";
-import EmployeesList from "../components/practice1/EmployeesList/index";
+import EmployeeFormModal from "../components/practice1U1/EmployeeFormModal/index";
+import EmployeesList from "../components/practice1U1/EmployeesList/index";
 
 import { DataProvider } from "../context/DataContext";
 import { ActionsProvider } from "../context/ActionsContext";

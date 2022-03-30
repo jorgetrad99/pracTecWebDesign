@@ -28,6 +28,12 @@ const Home = () => {
             >
                 <a>Practice 1 Unit 2. </a>
             </NextLink>
+            <br /><br />
+            <NextLink
+                href='/practice2U2'
+            >
+                <a>Practice 2 Unit 2. </a>
+            </NextLink>
         </Fragment>
     )
 }

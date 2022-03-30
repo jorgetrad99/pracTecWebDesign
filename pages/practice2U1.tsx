@@ -2,8 +2,8 @@ import { LoadingButton } from "@mui/lab";
 import { Button, Container } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import SaveIcon from '@mui/icons-material/Save';
-import PlayerRecord from "../components/practice2/PlayerRecord";
-import Vector from "../components/practice2/Vector";
+import PlayerRecord from "../components/practice2U1/PlayerRecord";
+import Vector from "../components/practice2U1/Vector";
 
 const Practice2U1 = () => {
     const [ threeBoxesMarked, setThreeBoxesMarked ] = useState();
